@@ -1,0 +1,19 @@
+{
+  "name": "blazormockup",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "css:build": "tailwindcss -i wwwroot/css/tailwind-app.css -o wwwroot/css/app.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.40"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.7"
+  }
+}
