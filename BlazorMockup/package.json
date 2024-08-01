@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "css:build": "tailwindcss -i wwwroot/css/tailwind-app.css -o wwwroot/css/app.css --minify"
+    "dev": "css:build",
+    "css:build": "tailwindcss -i wwwroot/css/tailwind-app.css -o wwwroot/css/app.css "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.40"
-  },
   "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7"
   }
 }
