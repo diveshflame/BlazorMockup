@@ -1,0 +1,63 @@
+﻿@using System.Net.Http.Json
+@inject HttpClient httpClient
+@using BlazorMockup.Model
+
+<MudDataGrid Items="@Examinations.Take(4)" Hover="@_hover" Dense="@_dense" Striped="@_striped" Bordered="@_bordered"
+             RowStyleFunc="@_rowStyleFunc">
+    <Columns>
+        <PropertyColumn Property="x => x.Date" Title="Date" />
+        <PropertyColumn Property="x => x.ExaminationType" Title="Examination Type" />
+        <PropertyColumn Property="x => x.Weight" Title="Weight" />
+        <PropertyColumn Property="x => x.HeadCircumference" Title="Head Circumference" />
+        <PropertyColumn Property="x => x.Height" Title="Height" />
+        <PropertyColumn Property="x => x.Note" Title="Note" />
+    </Columns>
+</MudDataGrid>
+
+<div class="d-flex flex-wrap mt-4">
+    <MudSwitch @bind-Value="_hover" Color="Color.Primary">Hover</MudSwitch>
+    <MudSwitch @bind-Value="_dense" Color="Color.Secondary">Dense</MudSwitch>
+    <MudSwitch @bind-Value="_striped" Color="Color.Tertiary">Striped</MudSwitch>
+    <MudSwitch @bind-Value="_bordered" Color="Color.Warning">Bordered</MudSwitch>
+</div>
+
+@code {
+    private DataWarehouse.DataStore _dataStore = new DataWarehouse.DataStore();
+    private IEnumerable<Examination> Examinations ;
+    private bool _hover;
+    private bool _dense;
+    private bool _striped;
+    private bool _bordered;
+    // style the rows where the Examination.Date == DateTime.Now.Date to have italic text.
+    private Func<Examination, int, string> _rowStyleFunc => (x, i) =>
+    {
+        if (x.Date.Date == DateTime.Now.Date)
+            return "font-style:italic";
+
+        return "";
+    };
+    // style the cells according to the examination type.
+    private Func<Examination, string> _cellStyleFunc => x =>
+    {
+        string style = "";
+
+        if (x.ExaminationType == "Type1")
+            style += "background-color:#8CED8C";
+
+        else if (x.ExaminationType == "Type2")
+            style += "background-color:#E5BDE5";
+
+        else if (x.ExaminationType == "Type3")
+            style += "background-color:#EACE5D";
+
+        else if (x.ExaminationType == "Type4")
+            style += "background-color:#F1F165";
+
+        return style;
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Examinations = _dataStore.Examinations;
+    }
+}

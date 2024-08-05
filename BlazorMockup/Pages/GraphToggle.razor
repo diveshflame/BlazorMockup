@@ -1,0 +1,25 @@
+﻿
+<div class="bg-white w-[214px] h-[56px] p-[8px] gap-[8px] rounded-md">
+    <button class="@GridClass" @onclick="ToggleGrid">
+        Grid
+    </button>
+    <button class="@GraphClass" @onclick="ToggleGraph">
+        Graph
+    </button>
+</div>
+
+@code {
+    private bool isGridActive = true;
+    private string GridClass => isGridActive ? "bg-green-500 text-white" : "bg-white text-black";
+    private string GraphClass => isGridActive ? "bg-white text-black" : "bg-green-500 text-white";
+
+    private void ToggleGrid()
+    {
+        isGridActive = true;
+    }
+
+    private void ToggleGraph()
+    {
+        isGridActive = false;
+    }
+}
