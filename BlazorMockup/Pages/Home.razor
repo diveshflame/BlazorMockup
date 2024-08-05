@@ -1,9 +1,19 @@
 ﻿@page "/"
-
-<div class="bg-blue-500 py-4 px-6 rounded-t-lg hover:bg-pink-500">
-    <h1 class="text-red-600 text-xl font-bold">First Header Text</h1>
+@inject NavigationManager navigation
+<div class="px-6 py-4 bg-blue-500 rounded-t-lg hover:bg-pink-500">
+    <h1 class="text-xl font-bold text-red-600">First Header Text</h1>
 </div>
 
-<div class="bg-green-500 py-4 px-6 rounded-t-lg hover:bg-pink-500 mt-4">
-    <h1 class="text-red-600 text-xl font-bold">Second Header Text</h1>
+<div class="px-6 py-4 mt-4 bg-green-500 rounded-t-lg hover:bg-pink-500">
+    <h1 class="text-xl font-bold text-red-600">Second Header Text</h1>
 </div>
+
+<button  @onclick="Form"> NY form</button>
+<DatePicker></DatePicker>
+
+@code {
+    private void Form()
+    {
+        navigation.NavigateTo("/nyform");
+    }
+}
