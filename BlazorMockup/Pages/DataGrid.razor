@@ -3,28 +3,51 @@
 @using MudBlazor
 @using BlazorMockup.Model
 
-<MudDataGrid T="Examination" MultiSelection="true"
-            Items="@Examinations.Take(4)" Hover="true" Striped="@true" Bordered="true"
+<MudDataGrid T="Examination" MultiSelection="true" Height="344px" HeaderClass="custom-datagrid"
+            Items="@FilteredExaminations" Hover="true" Striped="@true" Bordered="true"
              RowStyleFunc="@_rowStyleFunc" Filterable="false" ShowFilterIcons="false"
-              SortMode="@SortMode.Single" Groupable="false" 
-              @bind-SelectedItems="@SelectedExaminations">
+              SortMode="@SortMode.Single" Groupable="false"
+              @bind-SelectedItems="@SelectedExaminations" FixedHeader="true">
+
+
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Examinations</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+
+
     <Columns>
         <SelectColumn T="Examination" />
-        <PropertyColumn Property="x => x.Date" Title="Date"/>
-        <PropertyColumn Property="x => x.ExaminationType" Title="Examination Type"/>
-        <PropertyColumn Property="x => x.Weight" Title="Weight" Sortable="false"/>
-        <PropertyColumn Property="x => x.HeadCircumference" Title="Head Circumference" Sortable="false"/>
-        <PropertyColumn Property="x => x.Height" Title="Height" Sortable="false"/>
-        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false"/>
-        <TemplateColumn StickyRight="true">
-            <CellTemplate>
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="@Size.Small" />
+        <PropertyColumn Property="x => x.Date" Title="Date" Format="dd-MM-yyyy"  HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.ExaminationType" Title="Examination Type" HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Weight" Title="Weight" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.HeadCircumference" Title="Head Circumference" Sortable="false" HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Height" Title="Height" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style"/>
+        <TemplateColumn StickyRight="true" HeaderClass="header-style">
+            <CellTemplate >
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="@Size.Small"  />
             </CellTemplate>
         </TemplateColumn>
     </Columns>
 </MudDataGrid>
+<style>
+    .header-style {
+        background-color: #EDF2F1 !important;
+    }
+    .column-header-text{
+        color: #727373 !important;
+    }
+    .mud-table thead th:first-child {
+        background-color: #EDF2F1 !important;
+        color: #727373 !important;
+    }
 
+</style>
 @code {
+    private string _searchString;    
     private HashSet<Examination> SelectedExaminations = new HashSet<Examination>();
     private DataWarehouse.DataStore _dataStore = new DataWarehouse.DataStore();
     private IEnumerable<Examination> Examinations ;
@@ -55,6 +78,15 @@
 
         return style;
     };
+ private IEnumerable<Examination> FilteredExaminations => string.IsNullOrWhiteSpace(_searchString) 
+        ? Examinations 
+        : Examinations.Where(x => 
+            x.Date.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.ExaminationType.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.Weight.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.HeadCircumference.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.Height.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.Note.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
