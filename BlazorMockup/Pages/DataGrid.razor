@@ -17,7 +17,6 @@
             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
 
-
     <Columns>
         <SelectColumn T="Examination" />
         <PropertyColumn Property="x => x.Date" Title="Date" Format="dd-MM-yyyy"  HeaderClass="header-style"/>
@@ -26,7 +25,7 @@
         <PropertyColumn Property="x => x.HeadCircumference" Title="Head Circumference" Sortable="false" HeaderClass="header-style"/>
         <PropertyColumn Property="x => x.Height" Title="Height" Sortable="false" HeaderClass="header-style" />
         <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style"/>
-        <TemplateColumn StickyRight="true" HeaderClass="header-style">
+        <TemplateColumn class="w-[10px]"  StickyRight="true" HeaderClass="header-style">
             <CellTemplate >
                 <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="@Size.Small"  />
             </CellTemplate>
@@ -59,25 +58,7 @@
 
         return "";
     };
-    // style the cells according to the examination type.
-    private Func<Examination, string> _cellStyleFunc => x =>
-    {
-        string style = "";
 
-        if (x.ExaminationType == "Type1")
-            style += "background-color:#8CED8C";
-
-        else if (x.ExaminationType == "Type2")
-            style += "background-color:#E5BDE5";
-
-        else if (x.ExaminationType == "Type3")
-            style += "background-color:#EACE5D";
-
-        else if (x.ExaminationType == "Type4")
-            style += "background-color:#F1F165";
-
-        return style;
-    };
  private IEnumerable<Examination> FilteredExaminations => string.IsNullOrWhiteSpace(_searchString) 
         ? Examinations 
         : Examinations.Where(x => 
