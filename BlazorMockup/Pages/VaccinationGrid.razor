@@ -1,0 +1,77 @@
+﻿@using System.Net.Http.Json
+@inject HttpClient httpClient
+@using MudBlazor
+@using BlazorMockup.Model
+
+<MudDataGrid T="Vaccination" MultiSelection="true" Height="344px" HeaderClass="custom-datagrid"
+            Items="@FilteredVaccinations" Hover="true" Striped="@true" Bordered="true"
+             RowStyleFunc="@_rowStyleFunc" Filterable="false" ShowFilterIcons="false"
+              SortMode="@SortMode.Single" Groupable="false"
+              @bind-SelectedItems="@SelectedVaccinations" FixedHeader="true">
+
+
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Vaccinations</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+
+
+    <Columns>
+        <SelectColumn T="Vaccination" />
+        <PropertyColumn Property="x => x.Date" Title="Date" Format="dd-MM-yyyy"  HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Vaccine" Title="Vaccine Type" HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Dosage" Title="Dose" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.Duration" Title="Dosage" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Credibility" Title="Credibility" Sortable="false" HeaderClass="header-style"/>
+        <TemplateColumn StickyRight="true" HeaderClass="header-style" Class="w-[5px]">
+            <CellTemplate >
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="@Size.Small" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+<style>
+    .header-style {
+        background-color: #EDF2F1 !important;
+    }
+    .column-header-text{
+        color: #727373 !important;
+    }
+    .mud-table thead th:first-child {
+        background-color: #EDF2F1 !important;
+        color: #727373 !important;
+    }
+    
+</style>
+@code {
+    private string _searchString;    
+    private HashSet<Vaccination> SelectedVaccinations = new HashSet<Vaccination>();
+    private DataWarehouse.DataStore _dataStore = new DataWarehouse.DataStore();
+    private IEnumerable<Vaccination> Vaccinations ;
+    // style the rows where the Vaccination.Date == DateTime.Now.Date to have italic text.
+    private Func<Vaccination, int, string> _rowStyleFunc => (x, i) =>
+    {
+        if (x.Date.Date == DateTime.Now.Date)
+            return "font-style:italic";
+
+        return "";
+    };
+
+    private IEnumerable<Vaccination> FilteredVaccinations => string.IsNullOrWhiteSpace(_searchString) 
+        ? Vaccinations 
+        : Vaccinations.Where(x => 
+            x.Date.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.Vaccine.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.Dosage.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+            x.Duration.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+            x.Note.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+            x.Credibility.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        Vaccinations = _dataStore.Vaccinations;
+    }
+}
