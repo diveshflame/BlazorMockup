@@ -1,19 +1,28 @@
 ﻿@page "/"
-@inject NavigationManager navigation
-<div class="px-6 py-4 bg-blue-500 rounded-t-lg hover:bg-pink-500">
-    <h1 class="text-xl font-bold text-red-600">First Header Text</h1>
+<div class="bg-[#FFFFF] w-[1476px] h-[655px] ml-1 border border-[#EDEDED] rounded-lg">
+
+<Header/>
+
+<div class="flex justify-between mt-[27px] ml-[51px] mb-[24px]">
+
+<h2 class="font-neo-sans font-medium text-[16px] text-[#606060] leading-[19.2px] ">Child Journal Module</h2>
+
+<NewFormButton />
 </div>
 
-<div class="px-6 py-4 mt-4 bg-green-500 rounded-t-lg hover:bg-pink-500">
-    <h1 class="text-xl font-bold text-red-600">Second Header Text</h1>
+<div class="ml-[51px] ">
+<DataGrid/>
 </div>
 
-<button  @onclick="Form"> NY form</button>
-<DatePicker></DatePicker>
+<div class="flex justify-between mt-[27px] ml-[51px] mb-[24px]">
 
-@code {
-    private void Form()
-    {
-        navigation.NavigateTo("/nyform");
-    }
-}
+<h2 class="font-neo-sans font-medium text-[16px] text-[#606060] leading-[19.2px] ">Planlagte vaccinationer</h2>
+
+<NewFormButton />
+</div>
+
+<div class="ml-[51px] ">
+<DataGrid/>
+</div>
+
+</div>
