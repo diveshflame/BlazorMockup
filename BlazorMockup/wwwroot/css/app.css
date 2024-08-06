@@ -587,13 +587,7 @@ video {
   font-size: 1.25rem;
   line-height: 1.75rem;
 }
-@font-face {
-  font-family: 'Neo Sans Std';
-  src: url('../fonts/NeoSansStd-Regular.woff2') format('woff2'),
-       url('../fonts/NeoSansStd-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
+
 .font-bold {
   font-weight: 700;
 }
