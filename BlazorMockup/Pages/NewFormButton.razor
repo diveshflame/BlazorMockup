@@ -1,4 +1,6 @@
-﻿<button class="gap-[12px] w-[79px] h-[40px] rounded-[8px] bg-[#D9F6EF] text-[#32947C] text-[14px] font-medium">
+﻿@inject NavigationManager Navigation
+
+<button class="gap-[12px] w-[79px] h-[40px] rounded-[8px] bg-[#D9F6EF] text-[#32947C] text-[14px] font-medium" @onclick="Navigate">
    
    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
         <path d="M0.24375 8.128V6.848C0.24375 6.528 0.46775 6.336 0.88375 6.336H6.35575V0.831999C6.35575 0.415998 6.51575 0.191999 6.86775 0.191999H8.14775C8.49975 0.191999 8.65975 0.415998 8.65975 0.831999V6.336H14.1638C14.5798 6.336 14.8038 6.528 14.8038 6.848V8.128C14.8038 8.48 14.5798 8.64 14.1638 8.64H8.65975V14.112C8.65975 14.528 8.49975 14.752 8.14775 14.752H6.86775C6.51575 14.752 6.35575 14.528 6.35575 14.112V8.64H0.88375C0.46775 8.64 0.24375 8.48 0.24375 8.128Z" fill="#32947C"/>
@@ -6,3 +8,10 @@
 
     Ny
 </button>
+
+@code{
+    private void Navigate()
+    {
+        Navigation.NavigateTo("/nyform");
+    }
+}
