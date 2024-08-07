@@ -3,7 +3,7 @@
 @using MudBlazor
 @using BlazorMockup.Model
 
-<MudDataGrid T="Vaccination" MultiSelection="true" Height="344px" HeaderClass="custom-datagrid"
+<MudDataGrid T="Vaccination" MultiSelection="true" Height="404px" HeaderClass="custom-datagrid"
             Items="@FilteredVaccinations" Hover="true" Striped="@true" Bordered="true"
              RowStyleFunc="@_rowStyleFunc" Filterable="false" ShowFilterIcons="false"
               SortMode="@SortMode.Single" Groupable="false"
@@ -20,58 +20,75 @@
 
     <Columns>
         <SelectColumn T="Vaccination" />
-        <PropertyColumn Property="x => x.Date" Title="Date" Format="dd-MM-yyyy"  HeaderClass="header-style"/>
-        <PropertyColumn Property="x => x.Vaccine" Title="Vaccine Type" HeaderClass="header-style"/>
-        <PropertyColumn Property="x => x.Dosage" Title="Dose" Sortable="false" HeaderClass="header-style" />
-        <PropertyColumn Property="x => x.Duration" Title="Dosage" Sortable="false" HeaderClass="header-style" />
-        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style"/>
-        <PropertyColumn Property="x => x.Credibility" Title="Credibility" Sortable="false" HeaderClass="header-style"/>
-        <TemplateColumn StickyRight="true" HeaderClass="header-style" Class="w-[5px]">
+        <PropertyColumn Property="x => x.Vaccine" Title="Vaccine" HeaderClass="header-style" >
+            <CellTemplate Context="context">
+                <div style="color: #32947C">@context.Item.Vaccine</div>
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Date" Title="Dato" Format="dd.MM.yyyy"  HeaderClass="header-style"/>
+
+        <PropertyColumn Property="x => x.Dosage" Title="Dosering" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.Duration" Title="Varighed" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.Credibility" Title="Credebility" Sortable="false" HeaderClass="header-style">
+            <CellTemplate Context="context">
+                @{
+                    var credibilityColor = Convert.ToInt32(context.Item.Credibility) <= 2 ? "#FB5050" : 
+                                            Convert.ToInt32(context.Item.Credibility) <= 4 ? "#F5D10E" : "#11B45C";
+                    var credibilityText = Convert.ToInt32(context.Item.Credibility) <= 2 ? "Lav" : 
+                                    Convert.ToInt32(context.Item.Credibility) <= 4 ? "Middel" : "Høj";
+                }
+                <div>
+                <div class="text-[12px] text-[#898989]">@credibilityText</div>
+                <div class="flex gap-[2px]">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <div class="w-[12px] h-[5px] rounded-[5px] flex-1" 
+                            style="background-color: @credibilityColor; 
+                                    opacity: @(i <= Convert.ToInt32(context.Item.Credibility) ? 1 : 0.2);" />
+                    }
+                </div>
+                </div>
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style"/>       
+        <TemplateColumn StickyRight="true" HeaderClass="header-style" Class="w-[10px]">
             <CellTemplate >
                 <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="@Size.Small" />
             </CellTemplate>
         </TemplateColumn>
     </Columns>
 </MudDataGrid>
-<style>
-    .header-style {
-        background-color: #EDF2F1 !important;
-    }
-    .column-header-text{
-        color: #727373 !important;
-    }
-    .mud-table thead th:first-child {
-        background-color: #EDF2F1 !important;
-        color: #727373 !important;
-    }
-    
-</style>
+
 @code {
-    private string _searchString;    
+    private string _searchString;
     private HashSet<Vaccination> SelectedVaccinations = new HashSet<Vaccination>();
     private DataWarehouse.DataStore _dataStore = new DataWarehouse.DataStore();
-    private IEnumerable<Vaccination> Vaccinations ;
-    // style the rows where the Vaccination.Date == DateTime.Now.Date to have italic text.
+    private IEnumerable<Vaccination> Vaccinations;
+
     private Func<Vaccination, int, string> _rowStyleFunc => (x, i) =>
     {
-        if (x.Date.Date == DateTime.Now.Date)
-            return "font-style:italic";
-
-        return "";
+        return x.Date.Date == DateTime.Now.Date ? "font-style:italic" : string.Empty;
     };
 
     private IEnumerable<Vaccination> FilteredVaccinations => string.IsNullOrWhiteSpace(_searchString) 
         ? Vaccinations 
         : Vaccinations.Where(x => 
-            x.Date.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.Vaccine.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.Dosage.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.Duration.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
-            x.Note.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
-            x.Credibility.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+            ContainsAny(x, _searchString)
+        );
+
+    private bool ContainsAny(Vaccination vaccination, string searchString)
+    {
+        return vaccination.Date.ToString("dd-MM-yyyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            vaccination.Vaccine.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            vaccination.Dosage.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            vaccination.Duration.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            vaccination.Note.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            vaccination.Credibility.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase);
+    }
 
     protected override async Task OnInitializedAsync()
     {
         Vaccinations = _dataStore.Vaccinations;
     }
+    
 }
