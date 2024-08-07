@@ -20,7 +20,9 @@
     </div> 
 
         <div class="flex-shrink-0">
-            <GraphToggle />
+            <GraphToggle OnToggleChanged="OnToggleChanged"/>
         </div>
 </div>
-
+@code {
+    [Parameter] public EventCallback<bool> OnToggleChanged { get; set; }
+}
