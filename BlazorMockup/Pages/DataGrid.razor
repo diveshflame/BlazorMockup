@@ -3,7 +3,7 @@
 @using MudBlazor
 @using BlazorMockup.Model
 
-<MudDataGrid T="Examination" MultiSelection="true" Height="344px" HeaderClass="custom-datagrid"
+<MudDataGrid T="Examination" MultiSelection="true" Height="342px" HeaderClass="custom-datagrid"
             Items="@FilteredExaminations" Hover="true" Striped="@true" Bordered="true"
              RowStyleFunc="@_rowStyleFunc" Filterable="false" ShowFilterIcons="false"
               SortMode="@SortMode.Single" Groupable="false"
@@ -19,7 +19,7 @@
 
     <Columns>
         <SelectColumn T="Examination" />
-        <PropertyColumn Property="x => x.Date" Title="Date" Format="dd-MM-yyyy"  HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Date" Title="Date" Format="dd.MM.yyyy"  HeaderClass="header-style"/>
         <PropertyColumn Property="x => x.ExaminationType" Title="Examination Type" HeaderClass="header-style"/>
         <PropertyColumn Property="x => x.Weight" Title="Weight" Sortable="false" HeaderClass="header-style" />
         <PropertyColumn Property="x => x.HeadCircumference" Title="Head Circumference" Sortable="false" HeaderClass="header-style"/>
@@ -36,9 +36,8 @@
     .header-style {
         background-color: #EDF2F1 !important;
     }
-    .column-header-text{
-        color: #727373 !important;
-    }
+    .mud-table{border-width: 1px;}
+
     .mud-table thead th:first-child {
         background-color: #EDF2F1 !important;
         color: #727373 !important;

@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Layout\" />
-    <Folder Include="ViewModel\" />
     <Folder Include="wwwroot\sample-data\" />
   </ItemGroup>
 
