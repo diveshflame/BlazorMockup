@@ -1,11 +1,11 @@
 ﻿@page "/nyform"
 @using MudBlazor
+@inject IJSRuntime JSRuntime
 @using System.Globalization
 
-@if (ShowForm)
-{
-    <div class="flex justify-center">
-        <div class="w-[466px] h-fit rounded-[16px] shadow-lg p-[24px] bg-[#FAFAFA]">
+
+<div class="flex justify-center">
+        <div class="w-[466px] h-fit p-[24px] bg-[#FAFAFA]">
 
             <div class="flex justify-between pb-[16px]">
                 <svg width="39" height="39" viewBox="0 0 39 39" fill="none">
@@ -23,74 +23,74 @@
             </div>
 
             <div>
-                <h2 class="text-[#384853] text-[20px]">NY Form</h2>
-                <p class="text-[#848484] text-[8px] pt-[12px] pb-[24px]">Create new Vaccination for the module.</p>
+                <h2 class="text-[#384853] text-[20px] font-medium">NY Form</h2>
+                <p class="text-[#848484] text-[10px] pt-[6px] pb-[24px] font-normal">Create new Vaccination for the module.</p>
             </div>
 
 
             <form>
                 <div class="flex pb-[24px]">
                     <div class="w-1/2 mr-[36px]">
-                        <label class="block text-[13px] text-[#384853] pb-[10px]">Dato</label>
+                        <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Dato</label>
                         <div class="relative">
                             <input type="date"  class="w-full h-[32px] text-[14px] px-4 py-2 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
                         </div>
                     </div>
                     <div class="w-1/2 ">
-                        <label class="block text-[13px] text-[#384853] pb-[10px]">Examination Type</label>
-                        <div class="relative">
-                            <select class="w-full h-[32px] text-[14px] px-4 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]">
-                                <option value="type1">1 ar</option>
-                                <option value="type2">2 ar</option>
-                            </select>
+                        <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Examination Type</label>
+                        <div class="relative inline-block w-full">
+                            <div @onclick="ToggleDropdown" class="w-full h-[32px] text-[14px] px-4 border rounded-[4px] focus:outline-none focus:border-    [#D6DCDE] bg-white flex items-center justify-between cursor-pointer">
+                                <span>@SelectedValue</span>
+                                <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                                    @if (IsOpen)
+                                    {
+                                        <div class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
+                                            @foreach (var examinationType in ExaminationTypes)
+                                            {
+                                                <div @onclick="() => SelectItem(examinationType)" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                                    @examinationType
+                                                </div>
+                                            }
+                                        </div>
+                                    }
                         </div>
                     </div>
                 </div>
 
                 <div class="flex pb-[24px]">
                     <div class="w-1/2 mr-[36px] relative">
-                        <label class="block text-[13px] text-[#384853] pb-[10px]">Weight</label>
+                        <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Weight</label>
                         <div class="relative">
                             <input type="text" class="w-full h-[32px] text-[14px] px-4 py-2 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
-                            <span class="absolute inset-y-0 flex items-center text-[12px] text-[#959595] right-3">KG</span>
+                            <span class="absolute inset-y-0 flex items-center text-[12px] text-[#959595] font-medium right-3">KG</span>
                         </div>
                     </div>
                     <div class="relative w-1/2">
-                        <label class="block text-[13px] text-[#384853] pb-[10px]">Height</label>
+                        <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Height</label>
                         <div class="relative">
                             <input type="text" class="w-full h-[32px] text-[14px] px-4 py-2 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
-                            <span class="absolute inset-y-0 flex items-center text-[12px] text-[#959595] right-3">CM</span>
+                            <span class="absolute inset-y-0 flex items-center text-[12px] text-[#959595] font-medium right-3">CM</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="pb-[32px]">
-                    <label class="block text-[13px] text-[#384853] pb-[10px]">Intern note</label>
+                    <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Intern note</label>
                     <textarea placeholder="Note..."class="w-full h-[80px] text-[14px] px-4 py-2 border rounded-[4px] resize-none focus:outline-none focus:border-[#D6DCDE]"></textarea>
                 </div>
 
 
                 <div class="flex justify-end">
-                    <button type="submit" class="w-[80px] h-[32px] p-[10px] mr-[24px] text-[#E2E5E6] text-sm bg-[#32947C] rounded-[4px] hover:bg-[#216D5B]">OK</button>
-                    <button type="button" class="w-[80px] h-[32px] text-sm p-[10px] bg-[#FAFAFA] border-[1px] border-[#32947C] border-solid rounded-[4px] text-[#32947C] hover:bg-[#32947C]" @onclick="HandleClose">Annuller</button>
+                    <button type="submit" class="w-[80px] h-[32px] p-[10px] mr-[24px] text-[#E2E5E6] text-sm font-medium bg-[#32947C] rounded-[4px] hover:bg-[#216D5B]">OK</button>
+                    <button type="button" class="w-[80px] h-[32px] text-sm font-medium p-[10px] bg-[#FAFAFA] border-[1px] border-[#32947C] border-solid rounded-[4px] text-[#32947C] hover:bg-[#E6EEEC]" @onclick="HandleClose">Annuller</button>
                 </div>
 
             </form>
 
         </div>
-    </div>
-}
+</div>
 
-@code{
 
-    [Parameter]
-    public bool ShowForm { get; set; }
-
-    [Parameter]
-    public EventCallback OnClose { get; set; }
-
-        public void HandleClose()
-        {
-            OnClose.InvokeAsync();
-        }
-}
