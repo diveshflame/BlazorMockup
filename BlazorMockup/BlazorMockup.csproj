@@ -30,8 +30,4 @@
     <_ContentIncludedByDefault Remove="Pages\OpretVaccination.razor" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Pages\OpretVaccination.razor" />
-  </ItemGroup>
-
 </Project>

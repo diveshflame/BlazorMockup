@@ -1,0 +1,114 @@
+﻿@page "/opretvaccination"
+@using MudBlazor
+@inject IJSRuntime JSRuntime
+@using System.Globalization
+
+<div class="flex justify-center">
+    <div class="w-[466px] h-fit p-[24px] bg-[#FAFAFA]">
+
+        <div class="flex justify-between pb-[16px]">
+            <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="19.5" cy="19.5" r="19.5" fill="#F4F4F4" />
+                <circle cx="19.4989" cy="19.4987" r="15.1667" fill="#5B5B5B" fill-opacity="0.1" />
+                <path d="M22 14C22.2652 14 22.5196 13.8946 22.7071 13.7071C22.8946 13.5196 23 13.2652 23 13V12C23 11.7348 22.8946 11.4804 22.7071 11.2929C22.5196 11.1054 22.2652 11 22 11H18C17.7348 11 17.4804 11.1054 17.2929 11.2929C17.1054 11.4804 17 11.7348 17 12V13C17 13.2652 17.1054 13.5196 17.2929 13.7071C17.4804 13.8946 17.7348 14 18 14M22 14H18M22 14V14.98C22.0001 15.4048 22.1509 15.8158 22.4256 16.1399C22.7003 16.464 23.081 16.6802 23.5 16.75C24.366 16.894 25 17.643 25 18.52V27C25 27.5304 24.7893 28.0391 24.4142 28.4142C24.0391 28.7893 23.5304 29 23 29H17C16.4696 29 15.9609 28.7893 15.5858 28.4142C15.2107 28.0391 15 27.5304 15 27V18.52C15 17.643 15.634 16.894 16.5 16.75C17.366 16.606 18 15.857 18 14.98V14M15 20H25M15 26H25M19 23H21" stroke="#5F6368" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <button class="flex items-center justify-center mt-[10px] w-7 h-7" @onclick="HandleClose">
+                <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="14.5" cy="14.5" r="14.5" fill="#E3E3E3" />
+                    <path d="M19.8177 9.86035L10.6099 18.956M10.6099 9.86035L19.8177 18.956" stroke="#505050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+
+        <div>
+            <h2 class="text-[#384853] text-[20px] pb-[24px] font-medium">Opret Vaccination</h2>
+        </div>
+
+
+        <form>
+            <div class="flex pb-[24px]">
+                <div class="w-1/2 mr-[36px]">
+                    <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Dato</label>
+                    <div class="relative">
+                        <input type="date" class="w-full h-[32px] text-[14px] px-4 py-2 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                    </div>
+                </div>
+                <div class="w-1/2 ">
+                    <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Vaccine</label>
+                        <div class="relative inline-block w-full">
+                            <div @onclick="ToggleDropdown" class="w-full h-[32px] text-[14px] px-4 border rounded-[4px] focus:outline-none focus:border-    [#D6DCDE] bg-white flex items-center justify-between cursor-pointer">
+                            @if(IsSearchVisible && IsVaccineOpen)
+                            {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
+                            <path d="M15 14.5L10.3333 9.83333M1 5.94444C1 6.65942 1.14082 7.36739 1.41443 8.02794C1.68804 8.68849 2.08908 9.28868 2.59464 9.79425C3.1002 10.2998 3.7004 10.7008 4.36095 10.9745C5.0215 11.2481 5.72947 11.3889 6.44444 11.3889C7.15942 11.3889 7.86739 11.2481 8.52794 10.9745C9.18849 10.7008 9.78868 10.2998 10.2942 9.79425C10.7998 9.28868 11.2008 8.68849 11.4745 8.02794C11.7481 7.36739 11.8889 6.65942 11.8889 5.94444C11.8889 5.22947 11.7481 4.5215 11.4745 3.86095C11.2008 3.2004 10.7998 2.6002 10.2942 2.09464C9.78868 1.58908 9.18849 1.18804 8.52794 0.914434C7.86739 0.640825 7.15942 0.5 6.44444 0.5C5.72947 0.5 5.0215 0.640825 4.36095 0.914434C3.7004 1.18804 3.1002 1.58908 2.59464 2.09464C2.08908 2.6002 1.68804 3.2004 1.41443 3.86095C1.14082 4.5215 1 5.22947 1 5.94444Z" stroke="#AEAEAE" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            }
+                                <span>@SelectedVaccine</span>
+                                <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                                    @if (IsVaccineOpen)
+                                    {
+                                        <div class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
+                                            @foreach (var vaccines in Vaccines)
+                                            {
+                                                <div @onclick="() => SelectVaccine(vaccines)" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                                    @vaccines
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                            </div>
+                        </div>
+            </div>
+
+            <div class="flex pb-[24px]">
+                <div class="w-1/2 mr-[36px] relative">
+                    <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Varighed</label>
+                    <div class="relative">
+                        <input type="text" class="w-full h-[32px] text-[14px] px-4 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                    </div>
+                </div>
+                <div class="relative w-1/2">
+                    <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Dosering</label>
+                    <div class="relative inline-block w-full">
+                        <div @onclick="ToggleDosageDropdown" class="w-full h-[32px] text-[14px] px-4 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE] bg-white flex items-center justify-between cursor-pointer">
+                            <span>@SelectedDosage</span>
+                            <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        @if (IsDosageOpen)
+                        {
+                            <div class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
+                                @foreach (var dosage in Dosage)
+                                {
+                                    <div @onclick="() => SelectDosage(dosage)" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                        @dosage
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="pb-[32px]">
+                <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Intern note</label>
+                <textarea placeholder="Note..." class="w-full h-[80px] text-[14px] px-4 py-2 border rounded-[4px] resize-none focus:outline-none focus:border-[#D6DCDE]"></textarea>
+            </div>
+
+
+            <div class="flex justify-end">
+                <button type="submit" class="w-[80px] h-[32px] p-[10px] mr-[24px] font-medium text-[#E2E5E6] text-sm bg-[#32947C] rounded-[4px] hover:bg-[#216D5B]">OK</button>
+                <button type="button" class="w-[80px] h-[32px] text-sm p-[10px] font-medium bg-[#FAFAFA] border-[1px] border-[#32947C] border-solid rounded-[4px] text-[#32947C] hover:bg-[#E6EEEC]" @onclick="HandleClose">Annuller</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+
