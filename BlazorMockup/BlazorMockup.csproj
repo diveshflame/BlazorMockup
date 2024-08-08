@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Layout\" />
+    <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\sample-data\" />
   </ItemGroup>
 

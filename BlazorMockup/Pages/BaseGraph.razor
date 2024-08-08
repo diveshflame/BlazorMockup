@@ -1,0 +1,36 @@
+﻿@using BlazorMockup.Model
+@using System.Text.Json
+@using BlazorMockup.ViewModel
+@using BlazorMockup.DataWarehouse
+@inject IJSRuntime JSRuntime
+@inject IDataStore DataStore
+
+<div class="chart-container">
+    <canvas @ref="chartCanvas"></canvas>
+</div>
+
+@code {
+    [Parameter] public GraphBase ViewModel { get; set; } = new GraphBase();
+
+    private ElementReference chartCanvas;
+
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (firstRender)
+    {
+        var canvas = chartCanvas.Context;
+        if (canvas != null)
+        {
+            await JSRuntime.InvokeVoidAsync("createChart", CancellationToken.None, chartCanvas, "line", ViewModel.Labels, ViewModel.Data, ViewModel.GraphType, ViewModel.LegendPosition);
+        }
+        else
+        {
+            Console.Error.WriteLine("chartCanvas is null");
+        }
+    }
+    else
+    {
+        await JSRuntime.InvokeVoidAsync("updateChart", CancellationToken.None, chartCanvas, "line", ViewModel.Labels, ViewModel.Data, ViewModel.GraphType, ViewModel.LegendPosition);
+    }
+}
+}

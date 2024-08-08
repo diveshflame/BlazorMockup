@@ -1,6 +1,8 @@
 ﻿@page "/"
 
-<div class="bg-[#FFFFF] w-full h-full border border-[#EDEDED] rounded-lg ml-[21px]">
+
+<div class="bg-[#FFFFF] w-full h-full border border-[#EDEDED] rounded-lg ml-[21px]"
+ >
 
 <Header OnToggleChanged="HandleToggleChange" />
 
@@ -15,7 +17,8 @@
 </div>
 
 @code {
-    private bool isGridActive = true;
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; }  private bool isGridActive = true;
 
     private void HandleToggleChange(bool isGridActive)
     {

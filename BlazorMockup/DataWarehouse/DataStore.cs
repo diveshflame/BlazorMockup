@@ -2,7 +2,7 @@
 
 namespace BlazorMockup.DataWarehouse
 {
-    public class DataStore
+    public class DataStore : IDataStore
     {
         public List<Examination> Examinations { get; set; }
         public List<Vaccination> Vaccinations { get; set; }
@@ -12,7 +12,7 @@ namespace BlazorMockup.DataWarehouse
             Examinations = CreateExaminationsList();
             Vaccinations = CreateVaccinationList();
         }
-        private List<Examination> CreateExaminationsList() 
+        private List<Examination> CreateExaminationsList()
         {
             var examinations = new List<Examination>
             {
@@ -48,6 +48,5 @@ namespace BlazorMockup.DataWarehouse
             };
             return vaccinations;
         }
-
     }
 }
