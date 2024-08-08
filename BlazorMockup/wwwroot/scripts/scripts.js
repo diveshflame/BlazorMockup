@@ -15,6 +15,13 @@ window.openDatePicker = (dateInput) => {
     dateInput.click();
 };
 
+window.addClickOutsideListener = (dotnetHelper) => {
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.relative.inline-block')) {
+            dotnetHelper.invokeMethodAsync('CloseDropdown');
+        }
+    });
+};
 // window.openDatePicker = () => {
 //     console.log("openDatePicker called");
 //     const dateInput = document.getElementById("date-input");

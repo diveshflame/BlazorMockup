@@ -8,6 +8,10 @@ module.exports = {
     ],
   theme: {
     extend: {
+      backgroundColor: {
+        'custom-green': '#32947C',
+         'custom-green-hover': 'rgba(50, 148, 124, 0.08)'
+      },
       fontFamily:{
         'neo-sans': ['Neo Sans Std', 'sans serif'],
       }
