@@ -1,11 +1,9 @@
 ﻿@page "/"
 
 <div class="bg-[#FFFFF] w-full h-full border border-[#EDEDED] rounded-lg ml-[21px]"
-
      @oncontextmenu:preventDefault="true"
- >
-
-<Header OnToggleChanged="HandleToggleChange" />
+>
+    <Header OnToggleChanged="HandleToggleChange" />
 
     @if (isGridActive)
     {
@@ -19,12 +17,12 @@
 
 @code {
     [Inject]
-    private IJSRuntime JSRuntime { get; set; }  private bool isGridActive = true;
+    private IJSRuntime JSRuntime { get; set; }  
+    private bool isGridActive = true;
 
     private void HandleToggleChange(bool isGridActive)
     {
         this.isGridActive = isGridActive;
         StateHasChanged();
     }
-
 }
