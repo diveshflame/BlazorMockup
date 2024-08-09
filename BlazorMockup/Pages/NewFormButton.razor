@@ -1,6 +1,7 @@
 ﻿@using MudBlazor
 @inject IDialogService DialogService
 
+<MudTooltip Text="Add">
 <button class="gap-[12px] w-[79px] h-[40px] rounded-[8px] bg-[#D9F6EF] text-[#32947C] text-[14px] font-medium" @onclick="OpenDialog">
    
    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
@@ -9,6 +10,7 @@
 
     Ny
 </button>
+</MudTooltip>
 
 @code{
     [Parameter]
