@@ -29,7 +29,13 @@
         <PropertyColumn Property="x => x.Weight" Title="Weight" Sortable="false" HeaderClass="header-style" />
         <PropertyColumn Property="x => x.HeadCircumference" Title="Head Circumference" Sortable="false" HeaderClass="header-style"/>
         <PropertyColumn Property="x => x.Height" Title="Height" Sortable="false" HeaderClass="header-style" />
-        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style"/>
+        <PropertyColumn Property="x => x.Note" Title="Note" Sortable="false" HeaderClass="header-style">
+            <CellTemplate Context="context">
+                <MudTooltip Text="@context.Item.Note">
+                    <MudText Typo="Typo.body2" Class="text-ellipsis">@context.Item.Note</MudText>
+                </MudTooltip>
+            </CellTemplate>
+        </PropertyColumn>
         <TemplateColumn class="w-[10px]"  StickyRight="true" HeaderClass="header-style">
             <CellTemplate >
                 <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="@Size.Small"  />

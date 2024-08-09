@@ -1,7 +1,8 @@
 ﻿@page "/"
 
-
 <div class="bg-[#FFFFF] w-full h-full border border-[#EDEDED] rounded-lg ml-[21px]"
+
+     @oncontextmenu:preventDefault="true"
  >
 
 <Header OnToggleChanged="HandleToggleChange" />
@@ -25,4 +26,5 @@
         this.isGridActive = isGridActive;
         StateHasChanged();
     }
+
 }
