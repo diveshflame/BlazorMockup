@@ -2,6 +2,8 @@
 @using MudBlazor
 @inject IJSRuntime JSRuntime
 @using System.Globalization
+@using BlazorMockup.DataWarehouse
+@inject IDataStore _dataStore
 
 <div class="flex justify-center">
     <div class="w-[466px] h-fit p-[24px] bg-[#FAFAFA]">
@@ -26,12 +28,12 @@
         </div>
 
 
-        <form>
+        <form @onsubmit="SaveVaccination">
             <div class="flex pb-[24px]">
                 <div class="w-1/2 mr-[36px]">
                     <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Dato</label>
                     <div class="relative">
-                        <input type="date" class="w-full h-[32px] text-[14px] px-4 py-2 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                        <input type="date" id="DateInput" @ref="DateInput" class="w-full h-[32px] text-[14px] px-4 py-2 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
                     </div>
                 </div>
                 <div class="w-1/2 ">
@@ -68,7 +70,7 @@
                 <div class="w-1/2 mr-[36px] relative">
                     <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Varighed</label>
                     <div class="relative">
-                        <input type="text" class="w-full h-[32px] text-[14px] px-4 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                        <input type="text" id="VarighedInput" @ref="VarighedInput" class="w-full h-[32px] text-[14px] px-4 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
                     </div>
                 </div>
                 <div class="relative w-1/2">
@@ -97,7 +99,7 @@
 
             <div class="pb-[32px]">
                 <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Intern note</label>
-                <textarea placeholder="Note..." class="w-full h-[80px] text-[14px] px-4 py-2 border rounded-[4px] resize-none focus:outline-none focus:border-[#D6DCDE]"></textarea>
+                <textarea id="InternNoteInput" @ref="InternNoteInput" placeholder="Note..." class="w-full h-[80px] text-[14px] px-4 py-2 border rounded-[4px] resize-none focus:outline-none focus:border-[#D6DCDE]"></textarea>
             </div>
 
 

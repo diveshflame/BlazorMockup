@@ -1,17 +1,53 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorMockup.ViewModel;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+using BlazorMockup.Model;
+using BlazorMockup.ViewModel;
 
 namespace BlazorMockup.Pages
 {
     public partial class OpretVaccinationForm
     {
         [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+        [Inject] private ExaminationEventService ExaminationEventService { get; set; }
         private bool IsSearchVisible { get; set; } = false;
         private bool IsVaccineOpen { get; set; } = false;
         private string SelectedVaccine { get; set; } = " Vaccine 1";
         private bool IsDosageOpen { get; set; } = false;
         private string SelectedDosage { get; set; } = "5 ml";
+
+        private Vaccination newVaccination =new Vaccination();
+        public event EventHandler<Vaccination> VaccinationSaved;
+
+        private ElementReference DateInput;
+        private ElementReference VarighedInput;
+        private ElementReference InternNoteInput;
+
+        private async Task SaveVaccination()
+        {
+            var dateValue = await JSRuntime.InvokeAsync<string>("getElementValue", DateInput);
+            if (!string.IsNullOrEmpty(dateValue))
+            {
+                newVaccination.Date = DateTime.Parse(dateValue);
+            }
+            else
+            {
+                newVaccination.Date = DateTime.MinValue;
+            }
+
+            newVaccination.Vaccine = SelectedVaccine;
+            newVaccination.Dosage = SelectedDosage;
+            newVaccination.Varighed= await JSRuntime.InvokeAsync<string>("getElementValue", VarighedInput);
+            newVaccination.Note = await JSRuntime.InvokeAsync<string>("getElementValue", InternNoteInput);
+
+            await _dataStore.AddVaccinationAsync(newVaccination);
+            VaccinationSaved?.Invoke(this,newVaccination);
+            ExaminationEventService.NotifyExaminationSaved();
+
+            newVaccination = new Vaccination();
+            MudDialog.Close();
+        }
 
         private void ToggleDropdown()
         {
