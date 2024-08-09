@@ -2,7 +2,8 @@
 @using MudBlazor
 @inject IJSRuntime JSRuntime
 @using System.Globalization
-
+@using BlazorMockup.DataWarehouse
+@inject IDataStore _dataStore
 
 <div class="flex justify-center">
         <div class="w-[466px] h-fit p-[24px] bg-[#FAFAFA]">
@@ -28,12 +29,12 @@
             </div>
 
 
-            <form>
+        <form @onsubmit="SaveExamination">
                 <div class="flex pb-[24px]">
                     <div class="w-1/2 mr-[36px]">
                         <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Dato</label>
                         <div class="relative">
-                            <input type="date"  class="w-full h-[32px] text-[14px] px-4 py-2 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                        <input type="date" id="DateInput" @ref="DateInput"  class="w-full h-[32px] text-[14px] px-4 py-2 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
                         </div>
                     </div>
                     <div class="w-1/2 ">
@@ -64,14 +65,14 @@
                     <div class="w-1/2 mr-[36px] relative">
                         <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Weight</label>
                         <div class="relative">
-                            <input type="text" class="w-full h-[32px] text-[14px] px-4 py-2 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                        <input type="text" id="WeightInput" @ref="WeightInput" class="w-full h-[32px] text-[14px] px-4 py-2 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
                             <span class="absolute inset-y-0 flex items-center text-[12px] text-[#959595] font-medium right-3">KG</span>
                         </div>
                     </div>
                     <div class="relative w-1/2">
                         <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Height</label>
                         <div class="relative">
-                            <input type="text" class="w-full h-[32px] text-[14px] px-4 py-2 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
+                        <input type="text" id="HeightInput" @ref="HeightInput" class="w-full h-[32px] text-[14px] px-4 py-2 pr-10 border rounded-[4px] focus:outline-none focus:border-[#D6DCDE]" />
                             <span class="absolute inset-y-0 flex items-center text-[12px] text-[#959595] font-medium right-3">CM</span>
                         </div>
                     </div>
@@ -79,12 +80,12 @@
 
                 <div class="pb-[32px]">
                     <label class="block text-[13px] text-[#384853] pb-[10px] font-normal">Intern note</label>
-                    <textarea placeholder="Note..."class="w-full h-[80px] text-[14px] px-4 py-2 border rounded-[4px] resize-none focus:outline-none focus:border-[#D6DCDE]"></textarea>
+                    <textarea id="InternNoteInput" @ref="InternNoteInput" placeholder="Note..."class="w-full h-[80px] text-[14px] px-4 py-2 border rounded-[4px] resize-none focus:outline-none focus:border-[#D6DCDE]"></textarea>
                 </div>
 
 
                 <div class="flex justify-end">
-                    <button type="submit" class="w-[80px] h-[32px] p-[10px] mr-[24px] text-[#E2E5E6] text-sm font-medium bg-[#32947C] rounded-[4px] hover:bg-[#216D5B]">OK</button>
+                <button type="submit" class="w-[80px] h-[32px] p-[10px] mr-[24px] text-[#E2E5E6] text-sm font-medium bg-[#32947C] rounded-[4px] hover:bg-[#216D5B]" >OK</button>
                     <button type="button" class="w-[80px] h-[32px] text-sm font-medium p-[10px] bg-[#FAFAFA] border-[1px] border-[#32947C] border-solid rounded-[4px] text-[#32947C] hover:bg-[#E6EEEC]" @onclick="HandleClose">Annuller</button>
                 </div>
 

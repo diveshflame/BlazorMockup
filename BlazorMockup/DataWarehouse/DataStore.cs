@@ -4,9 +4,8 @@ namespace BlazorMockup.DataWarehouse
 {
     public class DataStore : IDataStore
     {
-        public List<Examination> Examinations { get; set; }
-        public List<Vaccination> Vaccinations { get; set; }
-
+        public List<Examination> Examinations;
+        public List<Vaccination> Vaccinations;
         public DataStore()
         {
             Examinations = CreateExaminationsList();
@@ -48,5 +47,15 @@ namespace BlazorMockup.DataWarehouse
             };
             return vaccinations;
         }
+        public async Task AddExaminationAsync(Examination examination)
+        {
+            Examinations.Add(examination);
+            Console.WriteLine($"Examination saved: {examination.Date}, {examination.ExaminationType}");
+        }
+        public async Task<IEnumerable<Examination>> GetExaminationsAsync()
+        {
+            return Examinations;
+        }
+
     }
 }

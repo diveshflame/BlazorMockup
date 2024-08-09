@@ -1,4 +1,6 @@
-window.createChart = (chartCanvas, chartType, labels, data, datasetLabel, legendPosition = 'top') => {
+window.createChart = (chartCanvas, chartType, labels, data,
+                        LinePlusTwo, LinePlusOne, LineMinusOne, LineMinusTwo, 
+                        datasetLabel, legendPosition = 'top') => {
     console.log("Canvas element:", chartCanvas);
     const canvas = chartCanvas;
     const ctx = canvas.getContext('2d');
@@ -7,14 +9,45 @@ window.createChart = (chartCanvas, chartType, labels, data, datasetLabel, legend
         type: chartType,
         data: {
             labels: labels,
-            datasets: [{
+            datasets: [
+                {
+                    label: '+2 SD',
+                    data: LinePlusTwo,
+                    borderColor: 'rgba(255, 0, 0, 0.5)', // Red
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: '+1 SD',
+                    data: LinePlusOne,
+                    borderColor: 'rgba(255, 0, 0, 0.5)', // Red
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: '-1 SD',
+                    data: LineMinusOne,
+                    borderColor: 'rgba(0, 0, 255, 0.5)', // Blue
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: '-2 SD',
+                    data: LineMinusTwo,
+                    backgroundColor: 'rgba(0, 0, 255, 0.5)', // Blue
+                    borderColor: 'rgba(0, 0, 255, 0.5)', // Blue
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
                 label: datasetLabel,
                 data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 fill: false
-            }]
+            }
+        ]
         },
         options: {
             responsive: true,
@@ -30,7 +63,7 @@ window.createChart = (chartCanvas, chartType, labels, data, datasetLabel, legend
                 },
                 title: {
                     display: true,
-                    text: `${datasetLabel} vs Age`,
+                    text: `${datasetLabel} vs Month`,
                     font: {
                         size: 18
                     }
@@ -40,7 +73,7 @@ window.createChart = (chartCanvas, chartType, labels, data, datasetLabel, legend
                 x: {
                     title: {
                         display: true,
-                        text: 'Age'
+                        text: 'Month'
                     }
                 },
                 y: {
@@ -55,15 +88,20 @@ window.createChart = (chartCanvas, chartType, labels, data, datasetLabel, legend
     });
 };
 
-window.updateChart = (canvas, chartType, labels, data, datasetLabel, legendPosition = 'right') => {
+window.updateChart = (chartCanvas, chartType, labels, data,
+                        LinePlusTwo, LinePlusOne, LineMinusOne, LineMinusTwo, 
+                        datasetLabel, legendPosition = 'top') => {
     console.log("Updating chart with data:", { chartType, labels, data, datasetLabel, legendPosition });
     if (window.myChart) {
         window.myChart.data.labels = labels;
-        window.myChart.data.datasets[0].data = data;
-        window.myChart.data.datasets[0].label = datasetLabel;
+        window.myChart.data.datasets[0].data = LinePlusTwo;
+        window.myChart.data.datasets[1].data = LinePlusOne;
+        window.myChart.data.datasets[3].data = LineMinusOne;
+        window.myChart.data.datasets[4].data =LineMinusTwo;
+        window.myChart.data.datasets[5].data = data; // Update current data as well
         window.myChart.options.scales.y.title.text = datasetLabel;
         window.myChart.options.plugins.legend.position = legendPosition;
-        window.myChart.options.plugins.title.text = `${datasetLabel} vs Age`;
+        window.myChart.options.plugins.title.text = `${datasetLabel} vs Month`;
         window.myChart.update();
     } else {
         createChart(canvas, chartType, labels, data, datasetLabel, legendPosition);

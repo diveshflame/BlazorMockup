@@ -2,6 +2,10 @@
 @inject HttpClient httpClient
 @using MudBlazor
 @using BlazorMockup.Model
+@using BlazorMockup.ViewModel
+@using BlazorMockup.DataWarehouse
+@implements IDisposable
+@inject IDataStore _dataStore
 
 <MudDataGrid T="Examination" MultiSelection="true" Height="342px" HeaderClass="custom-datagrid"
             Items="@FilteredExaminations" Hover="true" Striped="@true" Bordered="true"
@@ -13,8 +17,9 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Examinations</MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"
+                      DebounceInterval="300" OnDebounceIntervalElapsed="@(()=>OnSearch(_searchString))" />
     </ToolBarContent>
 
     <Columns>
@@ -45,11 +50,11 @@
 
 </style>
 @code {
-    private string _searchString;    
+    private string _searchString;
     private HashSet<Examination> SelectedExaminations = new HashSet<Examination>();
-    private DataWarehouse.DataStore _dataStore = new DataWarehouse.DataStore();
-    private IEnumerable<Examination> Examinations ;
-    // style the rows where the Examination.Date == DateTime.Now.Date to have italic text.
+    private List<Examination> Examinations = new List<Examination>();
+    [Inject] private ExaminationEventService ExaminationEventService { get; set; }
+
     private Func<Examination, int, string> _rowStyleFunc => (x, i) =>
     {
         if (x.Date.Date == DateTime.Now.Date)
@@ -58,18 +63,45 @@
         return "";
     };
 
- private IEnumerable<Examination> FilteredExaminations => string.IsNullOrWhiteSpace(_searchString) 
-        ? Examinations 
-        : Examinations.Where(x => 
-            x.Date.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.ExaminationType.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.Weight.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.HeadCircumference.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-            x.Height.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+    private IEnumerable<Examination> FilteredExaminations => string.IsNullOrWhiteSpace(_searchString)
+        ? Examinations
+        : Examinations.Where(x =>
+            x.Date.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+            x.ExaminationType.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+            x.Weight.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+            x.HeadCircumference.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+            x.Height.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
             x.Note.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
-        Examinations = _dataStore.Examinations;
+        ExaminationEventService.ExaminationSaved += HandleExaminationSaved;
+        await LoadExaminations();
+    }
+
+    private async void HandleExaminationSaved(object sender, EventArgs e)
+    {
+        await InvokeAsync(async () =>
+        {
+            await LoadExaminations();
+        });
+    }
+
+    public void Dispose()
+    {
+        ExaminationEventService.ExaminationSaved -= HandleExaminationSaved;
+    }
+
+    private async Task LoadExaminations()
+    {
+        var examinations = await _dataStore.GetExaminationsAsync();
+        Examinations = new List<Examination>(examinations);
+        StateHasChanged();
+    }
+
+    private void OnSearch(string text)
+    {
+        _searchString = text;
+        StateHasChanged();
     }
 }

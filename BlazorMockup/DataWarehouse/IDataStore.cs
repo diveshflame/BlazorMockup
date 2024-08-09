@@ -4,7 +4,7 @@ namespace BlazorMockup.DataWarehouse
 {
     public interface IDataStore
     {
-        List<Examination> Examinations { get; set; }
-        List<Vaccination> Vaccinations { get; set; }
+        Task AddExaminationAsync(Examination examination);
+        Task<IEnumerable<Examination>> GetExaminationsAsync();
     }
 }

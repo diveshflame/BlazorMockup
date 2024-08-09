@@ -1,6 +1,7 @@
 ﻿@using BlazorMockup.ViewModel
 @using BlazorMockup.DataWarehouse
 @inject IDataStore DataStore
+@using System.Globalization
 
 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
     <MudTabPanel Text="Weight" @onclick="ShowWeightGraph">
@@ -14,26 +15,3 @@
     </MudTabPanel>
 </MudTabs>
 
-@code {
-    private GraphBase weightViewModel = new GraphBase
-        {
-            GraphType = "Weight"
-        };
-
-    private GraphBase heightViewModel = new GraphBase
-        {
-            GraphType = "Height"
-        };
-
-    private void ShowWeightGraph()
-    {
-        weightViewModel.LoadMeasurementsFromDataStore(DataStore); // Ensure data is loaded
-        StateHasChanged(); // Trigger re-render
-    }
-
-    private void ShowHeightGraph()
-    {
-        heightViewModel.LoadMeasurementsFromDataStore(DataStore); // Ensure data is loaded
-        StateHasChanged(); // Trigger re-render
-    }
-}

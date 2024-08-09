@@ -5,32 +5,39 @@
 @inject IJSRuntime JSRuntime
 @inject IDataStore DataStore
 
-<div class="chart-container">
+<div class="h-[70vh] flex justify-center" >
     <canvas @ref="chartCanvas"></canvas>
 </div>
+
 
 @code {
     [Parameter] public GraphBase ViewModel { get; set; } = new GraphBase();
 
     private ElementReference chartCanvas;
 
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (firstRender)
+ protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var canvas = chartCanvas.Context;
-        if (canvas != null)
+        if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("createChart", CancellationToken.None, chartCanvas, "line", ViewModel.Labels, ViewModel.Data, ViewModel.GraphType, ViewModel.LegendPosition);
+            var canvas = chartCanvas.Context;
+            if (canvas != null)
+            {
+                Console.WriteLine("Data:", JsonSerializer.Serialize(ViewModel.Data));
+                Console.WriteLine("Labels:", JsonSerializer.Serialize(ViewModel.Labels));
+                await JSRuntime.InvokeVoidAsync("createChart", chartCanvas, "line", ViewModel.Labels, 
+                ViewModel.Data, ViewModel.LinePlusTwo, ViewModel.LinePlusOne, ViewModel.LineMinusOne, 
+                ViewModel.LineMinusTwo, ViewModel.GraphType, ViewModel.LegendPosition);
+           }
+            else
+            {
+                Console.Error.WriteLine("chartCanvas is null");
+            }
         }
         else
         {
-            Console.Error.WriteLine("chartCanvas is null");
+            await JSRuntime.InvokeVoidAsync("updateChart", chartCanvas, "line", ViewModel.Labels, 
+            ViewModel.Data, ViewModel.LinePlusTwo, ViewModel.LinePlusOne, ViewModel.LineMinusOne, 
+            ViewModel.LineMinusTwo, ViewModel.GraphType, ViewModel.LegendPosition);
         }
     }
-    else
-    {
-        await JSRuntime.InvokeVoidAsync("updateChart", CancellationToken.None, chartCanvas, "line", ViewModel.Labels, ViewModel.Data, ViewModel.GraphType, ViewModel.LegendPosition);
-    }
-}
 }
