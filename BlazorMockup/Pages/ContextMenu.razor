@@ -1,0 +1,27 @@
+﻿@page "/contextmenu"
+
+<MudPaper Class="d-flex justify-center align-center" Width="300px" Height="200px" Elevation="4" 
+                @oncontextmenu="OpenContextMenu">
+    <div>Right-click on this area to open the context menu</div>
+</MudPaper>
+
+<MudMenu @ref="contextMenu" AnchorOrigin="Origin.TopLeft" TransformOrigin="Origin.TopLeft">
+    <MudMenuItem OnClick="() => OnMenuItemClick("Item 1")">Item 1</MudMenuItem>
+    <MudMenuItem OnClick="() => OnMenuItemClick("Item 2")">Item 2</MudMenuItem>
+    <MudMenuItem OnClick="() => OnMenuItemClick("Item 3")">Item 3</MudMenuItem>
+</MudMenu>
+
+@code {
+    private MudMenu contextMenu;
+
+    private void OpenContextMenu(MouseEventArgs e)
+    {
+        e.PreventDefault(); // Prevent the default context menu from showing
+        contextMenu.Open(e.ClientX, e.ClientY); // Open MudMenu at the mouse position
+    }
+
+    private void OnMenuItemClick(string item)
+    {
+        Console.WriteLine($"Clicked on {item}");
+    }
+}
