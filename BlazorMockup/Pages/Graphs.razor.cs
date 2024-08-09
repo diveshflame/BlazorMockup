@@ -14,6 +14,11 @@ namespace BlazorMockup.Pages
             GraphType = "Height"
         };
 
+        protected override void OnInitialized()
+        {
+            ShowWeightGraph();
+        }
+
         private void ShowWeightGraph()
         {
             weightViewModel.LoadMeasurementsFromDataStore(DataStore);
