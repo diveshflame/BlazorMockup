@@ -48,11 +48,6 @@ namespace BlazorMockup.Pages
 
             // Reset the form
             newExamination = new Examination();
-            SelectedValue = "Anden undersøgelse";
-            await JSRuntime.InvokeVoidAsync("setElementValue", DateInput, null);
-            await JSRuntime.InvokeVoidAsync("setElementValue", WeightInput, null);
-            await JSRuntime.InvokeVoidAsync("setElementValue", HeightInput, null);
-            await JSRuntime.InvokeVoidAsync("setElementValue", InternNoteInput, null);
 
             // Close the dialog
             MudDialog.Close();

@@ -2,6 +2,10 @@
 @inject HttpClient httpClient
 @using MudBlazor
 @using BlazorMockup.Model
+@using BlazorMockup.ViewModel
+@using BlazorMockup.DataWarehouse
+@implements IDisposable
+@inject IDataStore _dataStore
 
 <MudDataGrid T="Vaccination" MultiSelection="true" Height="404px" HeaderClass="custom-datagrid"
             Items="@FilteredVaccinations" Hover="true" Striped="@true" Bordered="true"
@@ -14,7 +18,8 @@
         <MudText Typo="Typo.h6">Vaccinations</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"
+                      DebounceInterval="300" OnDebounceIntervalElapsed="@(()=>OnSearch(_searchString))"></MudTextField>
     </ToolBarContent>
 
 
@@ -28,7 +33,7 @@
         <PropertyColumn Property="x => x.Date" Title="Dato" Format="dd.MM.yyyy"  HeaderClass="header-style"/>
 
         <PropertyColumn Property="x => x.Dosage" Title="Dosering" Sortable="false" HeaderClass="header-style" />
-        <PropertyColumn Property="x => x.Duration" Title="Varighed" Sortable="false" HeaderClass="header-style" />
+        <PropertyColumn Property="x => x.Varighed" Title="Varighed" Sortable="false" HeaderClass="header-style" />
         <PropertyColumn Property="x => x.Credibility" Title="Credebility" Sortable="false" HeaderClass="header-style">
             <CellTemplate Context="context">
                 @{
@@ -62,8 +67,9 @@
 @code {
     private string _searchString;
     private HashSet<Vaccination> SelectedVaccinations = new HashSet<Vaccination>();
-    private DataWarehouse.DataStore _dataStore = new DataWarehouse.DataStore();
-    private IEnumerable<Vaccination> Vaccinations;
+    private List<Vaccination> Vaccinations = new List<Vaccination>();
+    [Inject] private ExaminationEventService ExaminationEventService { get; set; }
+    
 
     private Func<Vaccination, int, string> _rowStyleFunc => (x, i) =>
     {
@@ -81,14 +87,40 @@
         return vaccination.Date.ToString("dd-MM-yyyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
             vaccination.Vaccine.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
             vaccination.Dosage.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-            vaccination.Duration.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            vaccination.Varighed.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
             vaccination.Note.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
             vaccination.Credibility.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        Vaccinations = _dataStore.Vaccinations;
+        ExaminationEventService.ExaminationSaved += HandleExaminationSaved;
+        await LoadVaccinations();
     }
-    
+
+    private async void HandleExaminationSaved(object sender, EventArgs e)
+    {
+        await InvokeAsync(async () =>
+        {
+            await LoadVaccinations();
+        });
+    }
+
+    public void Dispose()
+    {
+        ExaminationEventService.ExaminationSaved -= HandleExaminationSaved;
+    }
+
+    private async Task LoadVaccinations()
+    {
+        var vaccinations = await _dataStore.GetVaccinationsAsync();
+        Vaccinations = new List<Vaccination>(vaccinations);
+        StateHasChanged();
+    }
+
+    private void OnSearch(string text)
+    {
+        _searchString = text;
+        StateHasChanged();
+    }
 }
